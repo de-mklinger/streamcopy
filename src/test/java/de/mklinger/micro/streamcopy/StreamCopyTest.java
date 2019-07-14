@@ -6,6 +6,7 @@ import static org.junit.Assert.assertThat;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.junit.Test;
@@ -46,6 +47,31 @@ public class StreamCopyTest {
 		}
 
 		assertThat(copied, equalTo((long)bytes.length));
+	}
+
+	@Test
+	public void testCopyByteArray() throws IOException {
+		final byte[] bytes = randomBytes();
+
+		byte[] out;
+		try (ByteArrayInputStream in = new ByteArrayInputStream(bytes)) {
+			out = StreamCopy.toByteArray(in);
+		}
+
+		assertThat(out, equalTo(bytes));
+	}
+
+	@Test
+	public void testCopyString() throws IOException {
+		final String string = "Ihr naht euch wieder, schwankende Gestalten!\n" +
+				"Die früh sich einst dem trüben Blick gezeigt.";
+
+		String out;
+		try (ByteArrayInputStream in = new ByteArrayInputStream(string.getBytes(StandardCharsets.UTF_8))) {
+			out = StreamCopy.toString(in, StandardCharsets.UTF_8);
+		}
+
+		assertThat(out, equalTo(string));
 	}
 
 	private byte[] randomBytes() {

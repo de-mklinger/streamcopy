@@ -16,9 +16,11 @@
  */
 package de.mklinger.micro.streamcopy;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 
 /**
  * Stream copy utility.
@@ -109,5 +111,33 @@ public class StreamCopy {
 			count += n;
 		}
 		return count;
+	}
+
+	/**
+	 * Copies bytes from a <code>InputStream</code> to a new <code>byte</code>
+	 * array.
+	 *
+	 * @param input the <code>InputStream</code> to read from
+	 * @return the byte array
+	 * @throws NullPointerException if the input is null
+	 * @throws IOException if an I/O error occurs
+	 */
+	public static byte[] toByteArray(final InputStream in) throws IOException {
+		final ByteArrayOutputStream out = new ByteArrayOutputStream();
+		copy(in, out);
+		return out.toByteArray();
+	}
+
+	/**
+	 * Copies bytes from a <code>InputStream</code> to a new <code>String</code>
+	 * using the given Charset.
+	 *
+	 * @param input the <code>InputStream</code> to read from
+	 * @return the String
+	 * @throws NullPointerException if the input is null
+	 * @throws IOException if an I/O error occurs
+	 */
+	public static String toString(final InputStream in, final Charset charset) throws IOException {
+		return new String(toByteArray(in), charset);
 	}
 }
